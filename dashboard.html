@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Board Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a1a2a; /* डार्क बैकग्राउंड */
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #00d4ff; /* सियान टेक्स्ट */
+        }
+        .dashboard {
+            width: 90%;
+            max-width: 1200px;
+            background: #1c2526; /* डार्क पैनल बैकग्राउंड */
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #00d4ff;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #00d4ff;
+            padding-bottom: 10px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .header .clock {
+            font-size: 36px;
+            font-weight: bold;
+        }
+        .main-content {
+            display: flex;
+            gap: 20px;
+        }
+        .left-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .right-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .card {
+            background: #2a3b4c; /* कार्ड बैकग्राउंड */
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid #00d4ff;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+        }
+        .card h3 {
+            margin: 0 0 10px;
+            font-size: 16px;
+            text-transform: uppercase;
+            color: #00d4ff;
+        }
+        .security-status {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .security-status .icon {
+            width: 50px;
+            height: 50px;
+            background: #00d4ff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: #1c2526;
+        }
+        .security-status .status {
+            text-align: center;
+        }
+        .security-status .status p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .system-alerts ul {
+            list-style: none;
+            padding: 0;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .system-alerts ul li {
+            padding: 5px 0;
+            border-bottom: 1px solid #00d4ff;
+            font-size: 14px;
+        }
+        .analysis .chart {
+            height: 150px;
+            background: #1c2526;
+            border-radius: 5px;
+            border: 1px solid #00d4ff;
+        }
+        .video-section {
+            margin-top: 20px;
+        }
+        .video-section input[type="file"] {
+            margin-bottom: 10px;
+            color: #00d4ff;
+        }
+        .video-section button {
+            padding: 8px 15px;
+            background: #00d4ff;
+            color: #1c2526;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .video-section button:hover {
+            background: #00b7d4;
+        }
+        video {
+            width: 100%;
+            max-width: 100%;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .share-section {
+            margin-top: 20px;
+        }
+        .share-section input {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid #00d4ff;
+            border-radius: 5px;
+            background: #1c2526;
+            color: #00d4ff;
+            margin-right: 10px;
+        }
+        .share-section button {
+            padding: 10px 20px;
+            background: #00d4ff;
+            color: #1c2526;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .share-section button:hover {
+            background: #00b7d4;
+        }
+        .share-options {
+            display: none;
+            margin-top: 10px;
+        }
+        .share-options button {
+            background: #00d4ff;
+            color: #1c2526;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        .share-options button:hover {
+            background: #00b7d4;
+        }
+        .logout-btn {
+            background: #ff4d4d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .logout-btn:hover {
+            background: #e60000;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- हेडर -->
+        <div class="header">
+            <h1>Security Board</h1>
+            <div class="clock" id="clock">00:00</div>
+        </div>
+
+        <!-- मुख्य कंटेंट -->
+        <div class="main-content">
+            <!-- बायाँ सेक्शन -->
+            <div class="left-section">
+                <!-- सिक्योरिटी स्टेटस -->
+                <div class="card security-status">
+                    <div class="status">
+                        <div class="icon">🔒</div>
+                        <p>Status</p>
+                        <p>Secure</p>
+                    </div>
+                    <div class="status">
+                        <div class="icon">⚠️</div>
+                        <p>Alerts</p>
+                        <p>3</p>
+                    </div>
+                </div>
+
+                <!-- सिस्टम अलर्ट्स -->
+                <div class="card system-alerts">
+                    <h3>System Alerts</h3>
+                    <ul>
+                        <li>Unauthorized access attempt detected</li>
+                        <li>Firewall breach at 01:45</li>
+                        <li>System update required</li>
+                        <li>Network anomaly detected</li>
+                        <li>Server overload warning</li>
+                    </ul>
+                </div>
+
+                <!-- शेयर सेक्शन -->
+                <div class="card share-section">
+                    <h3>Share Alert</h3>
+                    <input id="messageInput" placeholder="Type your alert message...">
+                    <button onclick="showShareOptions()">Send</button>
+                    <div class="share-options" id="shareOptions">
+                        <button onclick="shareOnWhatsApp()">WhatsApp</button>
+                        <button onclick="shareOnFacebook()">Facebook</button>
+                        <button onclick="shareOnTwitter()">Twitter</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- दायाँ सेक्शन -->
+            <div class="right-section">
+                <!-- एनालिसिस -->
+                <div class="card analysis">
+                    <h3>Analysis</h3>
+                    <div class="chart"></div>
+                </div>
+
+                <!-- वीडियो अपलोड -->
+                <div class="card video-section">
+                    <h3>Security Footage</h3>
+                    <input type="file" id="videoInput" accept="video/*" multiple>
+                    <button onclick="uploadVideos()">Upload Video</button>
+                    <div id="videoContainer">
+                        <video controls>
+                            <source src="videos/myvideo.mp4" type="video/mp4">
+                            आपका ब्राउज़र वीडियो टैग को सपोर्ट नहीं करता।
+                        </video>
+                    </div>
+                </div>
+
+                <!-- लॉगआउट बटन -->
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-storage.js";
+
+        // Firebase कॉन्फ़िगरेशन
+        const firebaseConfig = {
+            apiKey: "AIzaSyBHKPdF9BHR5fU1Nse3XsSKyRSvjLUr5l8",
+            authDomain: "my--ad-website.firebaseapp.com",
+            databaseURL: "https://my--ad-website-default-rtdb.firebaseio.com",
+            projectId: "my--ad-website",
+            storageBucket: "my--ad-website.firebasestorage.app",
+            messagingSenderId: "103110962705",
+            appId: "1:103110962705:web:546eca7dde39ff0b240bb0",
+            measurementId: "G-HL9H16B6F3"
+        };
+
+        // Firebase शुरू करें
+        const app = initializeApp(firebaseConfig);
+        const storage = getStorage(app);
+
+        // वर्तमान यूजर का नाम दिखाएं
+        const username = localStorage.getItem('currentUser');
+        document.getElementById('username').textContent = username || 'गेस्ट';
+
+        // शेयरिंग ऑप्शन्स दिखाने का फंक्शन
+        function showShareOptions() {
+            const shareOptions = document.getElementById('shareOptions');
+            shareOptions.style.display = shareOptions.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // मैसेज को सोशल मीडिया पर शेयर करने के फंक्शन
+        const messageInput = document.getElementById('messageInput');
+
+        function shareOnWhatsApp() {
+            const message = messageInput.value.trim();
+            if (message === "") {
+                alert("कृपया एक मैसेज टाइप करें!");
+                return;
+            }
+            const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(url, "_blank");
+            messageInput.value = '';
+            showShareOptions();
+        }
+
+        function shareOnFacebook() {
+            const message = messageInput.value.trim();
+            if (message === "") {
+                alert("कृपया एक मैसेज टाइप करें!");
+                return;
+            }
+            const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}"e=${encodeURIComponent(message)}`;
+            window.open(url, "_blank");
+            messageInput.value = '';
+            showShareOptions();
+        }
+
+        function shareOnTwitter() {
+            const message = messageInput.value.trim();
+            if (message === "") {
+                alert("कृपया एक मैसेज टाइप करें!");
+                return;
+            }
+            const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}&url=${encodeURIComponent(window.location.href)}`;
+            window.open(url, "_blank");
+            messageInput.value = '';
+            showShareOptions();
+        }
+
+        // वीडियो अपलोड का फंक्शन (Firebase Storage में)
+        async function uploadVideos() {
+            const videoInput = document.getElementById('videoInput');
+            const videoContainer = document.getElementById('videoContainer');
+            const files = videoInput.files;
+
+            if (files.length === 0) {
+                alert("कृपया कम से कम एक वीडियो सिलेक्ट करें!");
+                return;
+            }
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+
+                if (!file.type.startsWith('video/')) {
+                    alert(`${file.name} एक वीडियो फाइल नहीं है!`);
+                    continue;
+                }
+
+                const storageReference = storageRef(storage, `videos/${username}/${file.name}`);
+                try {
+                    const snapshot = await uploadBytes(storageReference, file);
+                    const videoURL = await getDownloadURL(snapshot.ref);
+
+                    const videoElement = document.createElement('video');
+                    videoElement.controls = true;
+                    videoElement.style.width = '100%';
+                    videoElement.style.maxWidth = '100%';
+                    videoElement.style.borderRadius = '5px';
+                    videoElement.style.marginTop = '10px';
+                    videoElement.src = videoURL;
+
+                    videoContainer.appendChild(videoElement);
+                } catch (error) {
+                    console.error("वीडियो अपलोड में त्रुटि:", error);
+                    alert("वीडियो अपलोड करने में त्रुटि हुई: " + error.message);
+                }
+            }
+
+            videoInput.value = '';
+        }
+
+        // रियल-टाइम क्लॉक
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('clock').textContent = `${hours}:${minutes}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // लॉगआउट फंक्शन
+        function logout() {
+            localStorage.removeItem('currentUser');
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>
