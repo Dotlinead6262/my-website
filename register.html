@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .register-box {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+        .register-box h2 {
+            margin: 0 0 20px;
+            color: #333;
+        }
+        .register-box input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .register-box button {
+            width: 100%;
+            padding: 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .register-box button:hover {
+            background: #2980b9;
+        }
+        .register-box a {
+            display: block;
+            margin-top: 10px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .register-box a:hover {
+            text-decoration: underline;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+        .success-message {
+            color: green;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-box">
+        <h2>Register</h2>
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button onclick="register()">Register</button>
+        <p class="error-message" id="errorMessage">Username already exists!</p>
+        <p class="success-message" id="successMessage">Registration successful! Please login.</p>
+        <a href="index.html">Already have an account? Login here</a>
+    </div>
+
+    <script>
+        function register() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+
+            // चेक करें कि यूज़रनेम और पासवर्ड खाली तो नहीं हैं
+            if (!username || !password) {
+                errorMessage.textContent = "Please enter both username and password!";
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+                return;
+            }
+
+            // localStorage से मौजूदा यूज़र्स को लें
+            let users = JSON.parse(localStorage.getItem('users')) || {};
+
+            // चेक करें कि यूज़रनेम पहले से मौजूद तो नहीं है
+            if (users[username]) {
+                errorMessage.textContent = "Username already exists!";
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+                return;
+            }
+
+            // नया यूज़र जोड़ें
+            users[username] = password;
+            localStorage.setItem('users', JSON.stringify(users));
+
+            // सफल रजिस्ट्रेशन का मैसेज दिखाएँ
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'block';
+
+            // 2 सेकंड बाद लॉगिन पेज पर रीडायरेक्ट करें
+            setTimeout(() => {
+                window.location.href = "index.html";
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
