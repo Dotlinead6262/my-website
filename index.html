@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+        .login-box h2 {
+            margin: 0 0 20px;
+            color: #333;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .login-box button:hover {
+            background: #2980b9;
+        }
+        .login-box a {
+            display: block;
+            margin-top: 10px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .login-box a:hover {
+            text-decoration: underline;
+        }
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button onclick="login()">Login</button>
+        <p class="error-message" id="errorMessage">Invalid username or password!</p>
+        <a href="register.html">Don't have an account? Register here</a>
+    </div>
+
+    <script>
+        function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorMessage = document.getElementById('errorMessage');
+
+            // localStorage से यूज़र्स को लें
+            let users = JSON.parse(localStorage.getItem('users')) || {};
+
+            // चेक करें कि यूज़रनेम मौजूद है और पासवर्ड सही है
+            if (users[username] && users[username] === password) {
+                errorMessage.style.display = 'none';
+                // लॉगिन करने वाले यूज़र का यूज़रनेम स्टोर करें
+                localStorage.setItem('currentUser', username);
+                window.location.href = "dashboard.html";
+            } else {
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = "Invalid username or password!";
+            }
+        }
+
+        // इनपुट फील्ड्स में Enter प्रेस करने पर लॉगिन फंक्शन कॉल करें
+        document.getElementById('password').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                login();
+            }
+        });
+        document.getElementById('username').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                login();
+            }
+        });
+    </script>
+</body>
+</html>
